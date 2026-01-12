@@ -1,0 +1,6 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner  # 動的プロビジョニングしない（静的PVを使う）
+volumeBindingMode: WaitForFirstConsumer    # Podがスケジュールされるまでバインドを待つ
