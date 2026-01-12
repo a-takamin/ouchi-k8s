@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: freshrss
+  namespace: argocd  # ArgoCD がインストールされている名前空間
+  labels:
+    app: freshrss
+spec:
+  project: default
+  
+  # デプロイ元（このGitリポジトリ）
+  source:
+    repoURL: https://github.com/a-takamin/ouchi-k8s.git
+    targetRevision: HEAD  # main ブランチを追跡
+    path: apps/freshrss/manifests
+  
+  # デプロイ先（Kubernetesクラスタ）
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: freshrss
+  
+  # 同期設定
+  syncPolicy:
+    automated:
+      prune: true      # Git から削除されたリソースをクラスタからも削除
+      selfHeal: true   # クラスタ側で手動変更されても Git の状態に自動復旧
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true  # 名前空間が存在しなければ自動作成
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freshrss
+  namespace: freshrss
+  labels:
+    app: freshrss
+spec:
+  replicas: 1  # Pod のレプリカ数（1つで十分）
+  selector:
+    matchLabels:
+      app: freshrss
+  template:
+    metadata:
+      labels:
+        app: freshrss
+    spec:
+      containers:
+      - name: freshrss
+        image: freshrss/freshrss:latest
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: CRON_MIN
+          value: "*/15"  # 15分ごとにフィード更新
+        - name: TZ
+          value: "Asia/Tokyo"
+        volumeMounts:
+        - name: freshrss-data
+          mountPath: /var/www/FreshRSS/data
+        - name: freshrss-extensions
+          mountPath: /var/www/FreshRSS/extensions
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: freshrss-data
+        persistentVolumeClaim:
+          claimName: freshrss-pvc
+      - name: freshrss-extensions
+        persistentVolumeClaim:
+          claimName: freshrss-pvc
