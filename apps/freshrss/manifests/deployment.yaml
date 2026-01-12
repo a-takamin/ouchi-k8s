@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freshrss
+  namespace: freshrss
+  labels:
+    app: freshrss
+spec:
+  replicas: 1  # Pod のレプリカ数。
+  selector:
+    matchLabels:
+      app: freshrss
+  template:
+    metadata:
+      labels:
+        app: freshrss
+    spec:
+      containers:
+      - name: freshrss
+        image: freshrss/freshrss:1.28.0
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: CRON_MIN
+          value: "*/15"  # 15分ごとにフィード更新
+        - name: TZ
+          value: "Asia/Tokyo"
+        volumeMounts:
+        - name: freshrss-storage
+          mountPath: /var/www/FreshRSS/data # "FreshRSS" のスペルで正しい。 https://hub.docker.com/r/freshrss/freshrss
+          subPath: data
+        - name: freshrss-storage
+          mountPath: /var/www/FreshRSS/extensions
+          subPath: extensions
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: freshrss-storage
+        persistentVolumeClaim:
+          claimName: freshrss-pvc

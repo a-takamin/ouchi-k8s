@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: freshrss-pvc
+  namespace: freshrss
+  labels:
+    app: freshrss
+spec:
+  selector:
+    matchLabels:
+      type: freshrss-storage
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 5Gi
+# このリソースはクラスタ共有リソースなので freshrss 配下にあるべきではないが、一気に色々な概念に手を出すと混乱するので、今回はこのまま適用する。
+# TODO: クラスタ共有リソースの管理方法を調べ、整理する。
