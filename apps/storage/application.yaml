@@ -13,12 +13,11 @@ spec:
     path: apps/storage/manifests
   destination:
     server: https://kubernetes.default.svc
-    # PersistentVolume はクラスタスコープなので namespace は指定しない
-    # ただし ArgoCD は namespace 必須なので default を指定
+    # PersistentVolumeとStorageClassはクラスタスコープのリソースだが、ArgoCDの仕様上namespaceの指定が必須であるため、これらのリソースはクラスタレベルで作成されるがArgoCDの管理上defaultを指定している
     namespace: default
   syncPolicy:
     automated:
-      prune: true
+      prune: false
       selfHeal: true
       allowEmpty: false
     syncOptions:

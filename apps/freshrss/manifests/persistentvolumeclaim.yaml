@@ -8,7 +8,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      type: freshrss-storage
+      app: freshrss
   accessModes:
     - ReadWriteOnce
   storageClassName: local-storage

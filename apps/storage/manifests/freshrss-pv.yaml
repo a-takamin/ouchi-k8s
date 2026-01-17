@@ -4,7 +4,6 @@ metadata:
   name: freshrss-pv
   labels:
     app: freshrss
-    type: freshrss-storage
 spec:
   capacity:
     storage: 5Gi
