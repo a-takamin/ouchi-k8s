@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: storage
+  namespace: argocd
+  labels:
+    app: storage
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/a-takamin/ouchi-k8s.git
+    targetRevision: main
+    path: apps/storage/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    # PersistentVolumeとStorageClassはクラスタスコープのリソースだが、ArgoCDの仕様上namespaceの指定が必須であるため、これらのリソースはクラスタレベルで作成されるがArgoCDの管理上defaultを指定している
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
