@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb
+  namespace: argocd # Application をどこにインストールするか。ArgoCD は argocd がデプロイされている名前空間を監視している = argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://metallb.github.io/metallb
+      chart: metallb # 公式で定義されている chart の名前
+      targetRevision: 0.15.3
+      helm:
+        releaseName: metallb # 自分がこの Helm リリースを識別するための名前
+    - repoURL: https://github.com/a-takamin/ouchi-k8s.git
+      targetRevision: HEAD
+      path: apps/metallb/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true # によりない場合は勝手に名前空間が作られる
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
