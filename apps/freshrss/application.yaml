@@ -23,7 +23,7 @@ spec:
       selfHeal: true   # クラスタ側で手動変更されても Git の状態に自動復旧
       allowEmpty: false
     syncOptions:
-    - CreateNamespace=true  # 名前空間が存在しなければ自動作成
+      - CreateNamespace=true  # 名前空間が存在しなければ自動作成
     retry:
       limit: 5
       backoff:
