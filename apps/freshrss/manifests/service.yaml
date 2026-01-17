@@ -5,8 +5,10 @@ metadata:
   namespace: freshrss
   labels:
     app: freshrss
+  annotations:
+    tailscale.com/expose: "true"
 spec:
-  type: LoadBalancer
+  type: ClusterIP # Tailscale で公開するので MetalLB は使わないことにした
   selector:
     app: freshrss
   ports:
