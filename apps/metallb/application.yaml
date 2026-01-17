@@ -2,7 +2,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: metallb
-  namespace: argocd # Application をどこにインストールするか。ArgoCD は argocd がデプロイされている名前空間を監視している = argocd
+  namespace: argocd
+  labels:
+    app: metallb
 spec:
   project: default
   sources:
@@ -12,7 +14,7 @@ spec:
       helm:
         releaseName: metallb # 自分がこの Helm リリースを識別するための名前
     - repoURL: https://github.com/a-takamin/ouchi-k8s.git
-      targetRevision: HEAD
+      targetRevision: main
       path: apps/metallb/manifests
   destination:
     server: https://kubernetes.default.svc
@@ -23,7 +25,7 @@ spec:
       selfHeal: true
       allowEmpty: false
     syncOptions:
-      - CreateNamespace=true # によりない場合は勝手に名前空間が作られる
+      - CreateNamespace=true
       - ServerSideApply=true
     retry:
       limit: 5
