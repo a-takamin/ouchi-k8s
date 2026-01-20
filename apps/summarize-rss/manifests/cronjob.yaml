@@ -4,8 +4,7 @@ metadata:
   name: summarize-rss
   namespace: summarize-rss
 spec:
-  schedule: "0 6 * * *" # 毎日6時に実行
-  timeZone: Asia/Tokyo
+  schedule: "0 21 * * *" # 日本時間で毎日6時に実行
   jobTemplate:
     spec:
       template:
