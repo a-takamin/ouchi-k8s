@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
           - name: summarize-rss
-            image: ghcr.io/a-takamin/summarize-rss:20260123170049-2e963f1
+            image: ghcr.io/a-takamin/summarize-rss:20260124032053-decb00f
             envFrom:
             - secretRef:
                 name: summarize-rss-secret
