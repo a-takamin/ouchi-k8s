@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+  labels:
+    app: kube-prometheus-stack
+spec:
+  project: default
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 81.3.2
+      helm:
+        releaseName: kube-prometheus-stack
+        valueFiles:
+          - $values/apps/monitoring/kube-prometheus-stack/manifests/values.yaml
+    - repoURL: https://github.com/a-takamin/ouchi-k8s.git
+      targetRevision: main
+      path: apps/monitoring/kube-prometheus-stack/manifests
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
