@@ -1,5 +1,6 @@
 grafana:
   enabled: true
+  adminPassword: prom-operator
   resources:
     requests:
       cpu: 100m
@@ -16,6 +17,8 @@ grafana:
     annotations:
       tailscale.com/expose: "true"
   ingress:
+    enabled: false
+  initChownData:
     enabled: false
 
 prometheus:
