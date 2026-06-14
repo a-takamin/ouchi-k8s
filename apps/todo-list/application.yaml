@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: todo-list
+  namespace: argocd
+  labels:
+    app: todo-list
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/a-takamin/ouchi-k8s.git
+    targetRevision: main
+    path: apps/todo-list/manifests
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: todo-list
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
