@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
           - name: todo-list
-            image: ghcr.io/a-takamin/todo-list:20260614121023-ae8946e
+            image: ghcr.io/a-takamin/todo-list:20260615140221-412946b
             envFrom:
             - secretRef:
                 name: todo-list-secret
